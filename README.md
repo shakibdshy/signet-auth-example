@@ -1,79 +1,67 @@
-# signet-auth-example
+# Signet Feature Showcase
 
-This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines Next.js, and more.
+A working frontend for [Signet](https://github.com/shakibdshy/signet-auth), a secure-by-default
+authentication library for Go. Signet intentionally ships no dashboard; this is the missing face —
+a public example that shows every shipped capability from the browser, calls the real API, and
+says plainly when a capability needs configuration.
 
-## Features
+- Docs: <https://go-signet-auth.vercel.app/>
+- Live backend: <https://go-signet-auth.onrender.com/auth/>
+- Spec: [issue #1](https://github.com/shakibdshy/signet-auth-example/issues/1)
 
-- **TypeScript** - For type safety and improved developer experience
-- **Next.js** - Full-stack React framework
-- **TailwindCSS** - Utility-first CSS for rapid UI development
-- **Shared UI package** - shadcn/ui primitives live in `packages/ui`
-
-## Getting Started
-
-First, install the dependencies:
+## Quickstart
 
 ```bash
 bun install
-```
-
-Then, run the development server:
-
-```bash
 bun run dev
 ```
 
-Open [http://localhost:3001](http://localhost:3001) in your browser to see the web application.
+Open <http://localhost:3001>. One command starts the Next.js app; there is no local Go server.
+The frontend reaches the deployed backend through a same-origin route-handler proxy at
+`/api/signet/*`, which forwards cookies, CSRF headers and `Set-Cookie` values. This is necessary
+because the deployment has no CORS headers and Signet uses cookie sessions.
 
-## UI Customization
-
-React web apps in this stack share shadcn/ui primitives through `packages/ui`.
-
-- Change design tokens and global styles in `packages/ui/src/styles/globals.css`
-- Update shared primitives in `packages/ui/src/components/*`
-- Adjust shadcn aliases or style config in `packages/ui/components.json` and `apps/web/components.json`
-
-### Add more shared components
-
-Run this from the project root to add more primitives to the shared UI package:
-
-```bash
-npx shadcn@latest add accordion dialog popover sheet table -c packages/ui
-```
-
-Import shared components like this:
-
-```tsx
-import { Button } from "@signet-auth-example/ui/components/button";
-```
-
-### Add app-specific blocks
-
-If you want to add app-specific blocks instead of shared primitives, run the shadcn CLI from `apps/web`.
-
-## Environment Configuration
-
-Each app owns its environment schema in `.env.schema`. Varlock generates `src/env.ts` during installation; run `bun run env:generate` after changing a schema. Commit schemas, and keep secrets in ignored env files or your deployment platform.
-
-Import the generated `ENV` accessor in application code. Shared database and auth packages receive configuration or initialized clients from the application. See [Varlock's monorepo guide](https://varlock.dev/guides/monorepos/).
-
-Bun's automatic env loading is disabled in `bunfig.toml`; the framework integration or server bootstrap loads Varlock. Node deployments must include Varlock and its dependencies alongside the app schema.
-
-Run standalone Node/Bun tools that use Varlock from the owning app directory so they load that app's schema and env files. `env:generate` only generates TypeScript files; it does not initialize environment values in a subsequent command.
-
-## Project Structure
+## Demo account
 
 ```
-signet-auth-example/
-├── apps/
-│   ├── web/         # Frontend application (Next.js)
-├── packages/
-│   ├── ui/          # Shared shadcn/ui components and styles
+demo@signet.dev
+SignetDemo!2026
 ```
 
-## Available Scripts
+This credential is public and non-sensitive. Use it for read-only and safe flows only. For
+anything destructive — password change, email change, deletion, session revocation, 2FA changes,
+organization or admin writes — create your own throwaway account through the sign-up form. The UI
+puts those calls behind a confirmation for exactly this reason.
 
-- `bun run dev`: Start all applications in development mode
-- `bun run build`: Build all applications
-- `bun run dev:web`: Start only the web application
-- `bun run check-types`: Check TypeScript types across all apps
+## Status badges
+
+| Badge | Meaning |
+| --- | --- |
+| **Live** | The flow completes against the deployed backend. |
+| **Needs role** | The endpoint exists, but an Authorizer denies this account. |
+| **Needs server config** | No provider or email-token source is configured on this deployment. |
+| **Library** | A Go-library capability with no browser-callable endpoint. |
+
+Verification, password reset, magic links and OTPs really call the backend. Their tokens are
+mailed to the server log, so an outside reader cannot finish them — the Dev inbox input accepts a
+pasted token if you can read those logs. Nothing here simulates success.
+
+## What is covered
+
+Thirteen Feature areas: core identity, sessions, verification and recovery, passwordless, second
+factor, passkeys, OAuth sign-in, authorization server, organizations, API keys, admin and
+impersonation, enterprise identity, and library internals. A static catalog drives the sidebar,
+badges, endpoint chips and docs links. An opt-in "read-only recheck" probes only safe endpoints.
+
+## Configuration
+
+`apps/web/.env.schema` defines `SIGNET_BACKEND_URL`, defaulting to the deployed backend. Override
+it in your local environment to point the Showcase at a different Signet deployment. Run
+`bun run env:generate` after editing the schema.
+
+## Scripts
+
+- `bun run dev` — start the frontend
+- `bun run build` — production build
+- `bun run check-types` — typecheck every workspace
+- `bun test` — proxy and catalog invariant tests

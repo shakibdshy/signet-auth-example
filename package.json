@@ -27,6 +27,7 @@
     "dev": "bun run --filter '*' dev",
     "build": "bun run --filter '*' build",
     "check-types": "bun run --filter '*' check-types",
+    "test": "bun test apps/web/src/lib/*.test.ts",
     "dev:web": "bun run --filter web dev",
     "env:generate": "varlock codegen --path ./apps/web/",
     "postinstall": "varlock codegen --path ./apps/web/"

@@ -1,23 +1,32 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Chakra_Petch, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 
 import "../index.css";
 import Header from "@/components/header";
 import Providers from "@/components/providers";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const display = Chakra_Petch({
+  variable: "--font-chakra",
   subsets: ["latin"],
+  weight: ["500", "600", "700"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const sans = IBM_Plex_Sans({
+  variable: "--font-plex-sans",
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
+
+const mono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
-  title: "signet-auth-example",
-  description: "signet-auth-example",
+  title: "Signet — every auth flow, in the open",
+  description:
+    "A live, frontend-first showcase of every capability in the Signet authentication library for Go.",
 };
 
 export default function RootLayout({
@@ -27,9 +36,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${display.variable} ${sans.variable} ${mono.variable} antialiased`}
+      >
         <Providers>
-          <div className="grid grid-rows-[auto_1fr] h-svh">
+          <div className="grid min-h-svh grid-rows-[auto_1fr]">
             <Header />
             {children}
           </div>
