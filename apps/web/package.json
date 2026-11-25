@@ -1,0 +1,35 @@
+{
+  "name": "web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3001",
+    "build": "next build",
+    "check-types": "tsc --noEmit",
+    "start": "next start",
+    "env:generate": "varlock codegen"
+  },
+  "dependencies": {
+    "@signet-auth-example/ui": "workspace:*",
+    "@swc/helpers": "^0.5.24",
+    "@varlock/nextjs-integration": "2.0.1",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "lucide-react": "catalog:",
+    "next": "^16.4.6",
+    "next-themes": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "sonner": "catalog:",
+    "varlock": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@signet-auth-example/config": "workspace:*",
+    "@tailwindcss/postcss": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:"
+  }
+}

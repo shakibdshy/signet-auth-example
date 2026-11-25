@@ -1,0 +1,47 @@
+{
+  "name": "signet-auth-example",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "packages/*"
+    ],
+    "catalog": {
+      "zod": "^4.6.7",
+      "typescript": "^6.0.3",
+      "@types/node": "^26.6.6",
+      "varlock": "1.25.0",
+      "lucide-react": "^1.72.0",
+      "next-themes": "^0.4.6",
+      "react": "^19.3.1",
+      "react-dom": "^19.3.1",
+      "sonner": "^2.0.8",
+      "@tailwindcss/postcss": "^4.3.5",
+      "@types/react": "^19.3.0",
+      "@types/react-dom": "^19.3.0",
+      "tailwindcss": "^4.3.5"
+    }
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --filter '*' dev",
+    "build": "bun run --filter '*' build",
+    "check-types": "bun run --filter '*' check-types",
+    "dev:web": "bun run --filter web dev",
+    "env:generate": "varlock codegen --path ./apps/web/",
+    "postinstall": "varlock codegen --path ./apps/web/"
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@signet-auth-example/config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "varlock": "catalog:"
+  },
+  "overrides": {
+    "@next/env": "npm:@varlock/nextjs-integration@2.0.1"
+  },
+  "packageManager": "bun@1.4.3"
+}

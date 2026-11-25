@@ -1,0 +1,3 @@
+{
+  "extends": "@signet-auth-example/config/tsconfig.base.json"
+}
