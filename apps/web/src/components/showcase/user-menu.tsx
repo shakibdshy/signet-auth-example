@@ -9,6 +9,7 @@ import { Button } from "@signet-auth-example/ui/components/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -42,27 +43,31 @@ export function UserMenu() {
         <span className="hidden max-w-32 truncate sm:inline">{user?.email}</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel className="flex flex-col gap-1">
-          <span className="text-foreground">{user?.name}</span>
-          <span className="font-mono text-[0.65rem] normal-case tracking-normal text-muted-foreground">
-            {user?.email}
-          </span>
-        </DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="flex flex-col gap-1">
+            <span className="text-foreground">{user?.name}</span>
+            <span className="font-mono text-[0.65rem] normal-case tracking-normal text-muted-foreground">
+              {user?.email}
+            </span>
+          </DropdownMenuLabel>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          variant="destructive"
-          disabled={busy}
-          onClick={() => {
-            setBusy(true);
-            void signOut().finally(() => {
-              setBusy(false);
-              router.push("/");
-            });
-          }}
-        >
-          <LogOut />
-          Sign out
-        </DropdownMenuItem>
+        <DropdownMenuGroup>
+          <DropdownMenuItem
+            variant="destructive"
+            disabled={busy}
+            onClick={() => {
+              setBusy(true);
+              void signOut().finally(() => {
+                setBusy(false);
+                router.push("/");
+              });
+            }}
+          >
+            <LogOut />
+            Sign out
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );
