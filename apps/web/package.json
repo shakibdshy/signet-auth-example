@@ -10,6 +10,8 @@
     "env:generate": "varlock codegen"
   },
   "dependencies": {
+    "@shakibdshy/signet-auth-client": "1.0.0-beta",
+    "@shakibdshy/signet-auth-react": "1.0.0-beta",
     "@signet-auth-example/ui": "workspace:*",
     "@swc/helpers": "^0.5.24",
     "@varlock/nextjs-integration": "2.0.1",
@@ -26,6 +28,7 @@
   "devDependencies": {
     "@signet-auth-example/config": "workspace:*",
     "@tailwindcss/postcss": "catalog:",
+    "@types/bun": "^1.4.5",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
