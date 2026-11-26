@@ -7,7 +7,7 @@ import { useSession } from "@shakibdshy/signet-auth-react";
 import { Button } from "@signet-auth-example/ui/components/button";
 import { Input } from "@signet-auth-example/ui/components/input";
 import { Label } from "@signet-auth-example/ui/components/label";
-import { LoaderCircle, ArrowRight } from "lucide-react";
+import { ArrowRight, LoaderCircle, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 
 import { describeSignetError, signetClient } from "@/lib/signet-client";
@@ -35,8 +35,8 @@ export function SignInForm() {
         return;
       }
       await refresh();
-      toast.success("Session established");
-      router.push("/showcase/overview");
+      toast.success("Signed in");
+      router.push("/account");
     } catch (error) {
       toast.error(describeSignetError(error).message);
     } finally {
@@ -52,7 +52,7 @@ export function SignInForm() {
       await signetClient.verifyTwoFactor({ challenge, code });
       await refresh();
       toast.success("Two-factor verified");
-      router.push("/showcase/overview");
+      router.push("/account");
     } catch (error) {
       toast.error(describeSignetError(error).message);
     } finally {
@@ -63,25 +63,27 @@ export function SignInForm() {
   if (challenge) {
     return (
       <form onSubmit={handleChallenge} className="flex flex-col gap-4">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <ShieldCheck className="size-4 text-signal" />
+          Enter the six-digit code from your authenticator app.
+        </div>
         <div className="flex flex-col gap-2">
-          <Label htmlFor="totp">Two-factor code</Label>
+          <Label htmlFor="signin-totp">Two-factor code</Label>
           <Input
-            id="totp"
+            id="signin-totp"
             inputMode="numeric"
-            autoComplete="one-time-code"
             value={code}
-            onChange={(event) => setCode(event.target.value)}
+            onChange={(event) => setCode(event.target.value.trim())}
             placeholder="000000"
+            maxLength={6}
+            className="font-mono"
             required
           />
         </div>
-        <Button type="submit" disabled={busy} className="w-full justify-between">
+        <Button type="submit" disabled={busy || code.length < 6} className="w-full justify-between">
           {busy ? <LoaderCircle data-icon="inline-start" className="animate-spin" /> : null}
-          Verify challenge
+          Verify and sign in
           <ArrowRight data-icon="inline-end" />
-        </Button>
-        <Button type="button" variant="ghost" onClick={() => setChallenge(null)}>
-          Use another account
         </Button>
       </form>
     );
@@ -98,7 +100,6 @@ export function SignInForm() {
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           placeholder="you@example.com"
-          required
         />
       </div>
       <div className="flex flex-col gap-2">

@@ -8,6 +8,9 @@
 export type FetchLike = (request: Request) => Promise<Response>;
 
 const PROXY_PREFIX = "/api/signet";
+// Emailed links point at {AppURL}/auth/... and a next.config rewrite lands them
+// on this proxy with their original path preserved, so strip that prefix too.
+const LINK_PREFIX = "/auth";
 const TIMEOUT_MS = 60_000;
 
 const HOP_BY_HOP_HEADERS = new Set([
@@ -38,8 +41,11 @@ export async function forwardSignet(
   const backend = new URL(backendURL);
   const incoming = new URL(request.url);
 
-  const suffix = incoming.pathname.startsWith(PROXY_PREFIX)
-    ? incoming.pathname.slice(PROXY_PREFIX.length)
+  const prefix = [PROXY_PREFIX, LINK_PREFIX].find((candidate) =>
+    incoming.pathname.startsWith(candidate),
+  );
+  const suffix = prefix
+    ? incoming.pathname.slice(prefix.length)
     : incoming.pathname;
   const upstreamURL = new URL(
     `${backend.pathname.replace(/\/$/, "")}${suffix.startsWith("/") ? suffix : `/${suffix}`}`,

@@ -74,6 +74,25 @@ test("relays every Set-Cookie header from the backend", async () => {
   ]);
 });
 
+test("accepts emailed-link paths arriving as /auth/*", async () => {
+  let seen: { url?: string; method?: string } = {};
+  const fakeFetch: FetchLike = async (request) => {
+    seen = { url: request.url, method: request.method };
+    return new Response(null, { status: 302, headers: { location: "http://localhost:3001/auth/callback" } });
+  };
+
+  // A clicked magic link lands on the app origin with its original path intact.
+  const response = await forwardSignet(
+    new Request("http://localhost:3001/auth/verify-magic-link?token=abc&callback_url=x"),
+    BACKEND,
+    fakeFetch,
+  );
+
+  expect(seen.url).toBe("https://auth.example.com/auth/verify-magic-link?token=abc&callback_url=x");
+  expect(seen.method).toBe("GET");
+  expect(response.status).toBe(302);
+});
+
 test("passes upstream errors through unchanged", async () => {
   const fakeFetch: FetchLike = async () =>
     new Response(JSON.stringify({ error: "forbidden", message: "permission denied" }), {

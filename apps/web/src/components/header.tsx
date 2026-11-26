@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useSession } from "@shakibdshy/signet-auth-react";
 
 import { Button } from "@signet-auth-example/ui/components/button";
-import { ArrowUpRight, Boxes } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 import { ModeToggle } from "./mode-toggle";
 
@@ -34,10 +34,10 @@ export default function Header() {
 
         <nav className="hidden items-center gap-5 lg:flex" aria-label="Primary">
           <Link
-            href="/showcase/overview"
+            href="/playground/overview"
             className="mono-label text-muted-foreground transition-colors hover:text-foreground"
           >
-            Showcase
+            Playground
           </Link>
           {externalLinks.map(({ href, label }) => (
             <a
@@ -55,23 +55,40 @@ export default function Header() {
 
         <div className="ml-auto flex items-center gap-2">
           {status === "authenticated" ? (
-            <span className="hidden max-w-40 truncate font-mono text-xs text-foreground/80 lg:inline">
-              {user?.name ?? user?.email}
-            </span>
-          ) : null}
-          <span className="hidden items-center gap-2 border px-2.5 py-1.5 sm:inline-flex">
-            <span className="size-1.5 bg-signal" />
-            <span className="mono-label text-muted-foreground">Snapshot 2026-11-26</span>
-          </span>
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            render={<Link href="/showcase/overview" aria-label="Open showcase" />}
-            nativeButton={false}
-            className="lg:hidden"
-          >
-            <Boxes />
-          </Button>
+            <>
+              <span className="hidden max-w-40 truncate font-mono text-xs text-foreground/80 lg:inline">
+                {user?.name ?? user?.email}
+              </span>
+              <Button
+                render={<Link href="/account" />}
+                nativeButton={false}
+                variant="outline"
+                size="sm"
+              >
+                Account
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                render={<Link href="/sign-in" />}
+                nativeButton={false}
+                variant="ghost"
+                size="sm"
+                className="hidden sm:inline-flex"
+              >
+                Sign in
+              </Button>
+              <Button
+                render={<Link href="/sign-up" />}
+                nativeButton={false}
+                size="sm"
+                className="mono-label"
+              >
+                Create account
+              </Button>
+            </>
+          )}
           <ModeToggle />
         </div>
       </div>

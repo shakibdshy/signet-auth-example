@@ -24,9 +24,9 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Signet — every auth flow, in the open",
+  title: "Signet — real auth flows, nothing simulated",
   description:
-    "A live, frontend-first showcase of every capability in the Signet authentication library for Go.",
+    "A working example of Signet, the authentication library for Go: sign-up, verification, password, magic-link and one-time-code sign-in — as real user flows.",
 };
 
 export default function RootLayout({

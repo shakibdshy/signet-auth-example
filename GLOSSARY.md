@@ -1,34 +1,58 @@
-# Signet Feature Showcase
+# Signet Example App
 
-The public example application that makes Signet's shipped auth capabilities visible and
-explorable from a real frontend.
+The public example application demonstrating Signet the way a real product would use it:
+every capability is a user flow a person completes end-to-end in the browser.
 
 ## Language
 
-**Showcase**:
-The example application itself, read by developers deciding whether to adopt Signet.
-_Avoid_: demo app, sample project, playground
+**Example app**:
+The application itself, showing Signet through real user flows rather than API testing.
+_Avoid_: showcase, demo app, sample project
 
-**Feature area**:
-A group of related Signet capabilities presented together because a developer evaluates them together.
-_Avoid_: category, module, section, tab
+**User flow**:
+A complete journey a person performs against the deployed backend — sign up, verify, sign in, recover — with real inputs and real emails.
+_Avoid_: live flow, feature flow, use case
 
-**Live flow**:
-An interaction in the showcase that completes against the deployed Signet backend.
-_Avoid_: working demo, enabled feature
+**Credential sign-in**:
+Signing in with an email-or-username identifier plus password.
+_Avoid_: password login, classic login
 
-**Gated feature**:
-A shipped Signet capability the showcase presents but cannot complete against the current deployment because it needs an administrator role or provider configuration.
-_Avoid_: disabled feature, broken feature, mock
+**Magic-link sign-in**:
+Passwordless sign-in by requesting an emailed link and clicking it in the same browser.
+_Avoid_: login link, email login
 
-**Dev inbox**:
-The panel where a tester pastes a token or link emitted by the backend mailer to finish a flow.
-_Avoid_: email viewer, outbox, inbox simulation
+**OTP sign-in**:
+Passwordless sign-in by requesting an emailed six-digit code and typing it in.
+_Avoid_: one-time password login, 2FA code
+
+**Email verification**:
+Proving ownership of the address given at sign-up, before or after first sign-in.
+_Avoid_: OTP verification, account activation
+
+**Sign-in method**:
+How the current session was established — credential, magic link, or OTP — as reported by the backend after sign-in.
+_Avoid_: login type, auth provider
+
+**Callback page**:
+The app page an emailed magic link's redirect lands on, where the established session is picked up.
+_Avoid_: redirect handler, landing URL
+
+**Manual token entry**:
+The fallback input for pasting a token or code from an email when its link path cannot be used.
+_Avoid_: dev inbox, outbox, token paste box
+
+**Same-origin proxy**:
+The app's boundary that relays requests to the Signet backend from the app's own origin, keeping session cookies first-party.
+_Avoid_: API gateway, backend-for-frontend
+
+**Playground**:
+The demoted API-testing area at `/playground`, kept as a developer tool for poking Signet endpoints directly.
+_Avoid_: showcase, console, feature area browser
 
 **Demo account**:
-The seeded credential on the deployed backend used to show signed-in screens.
+The seeded shared credential, referenced only inside the playground and its destructive-flow warnings.
 _Avoid_: test user, admin user, fixture
 
 **Status badge**:
-The label telling a reader whether a capability is Live, Needs Role, or Needs Server Config.
+The playground-only label telling a developer whether a capability is Live, Needs Role, or Needs Server Config.
 _Avoid_: health indicator, feature flag

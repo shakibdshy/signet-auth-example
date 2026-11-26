@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "@shakibdshy/signet-auth-react";
 
 import { Button } from "@signet-auth-example/ui/components/button";
 import { Input } from "@signet-auth-example/ui/components/input";
@@ -10,7 +12,10 @@ import { toast } from "sonner";
 
 import { describeSignetError, signetClient } from "@/lib/signet-client";
 
-export function SignUpForm({ onCreated }: { onCreated: () => void }) {
+export function SignUpForm({ onCreated }: { onCreated: (email: string) => void }) {
+  const router = useRouter();
+  const { refresh } = useSession();
+  const [username, setUsername] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,9 +25,15 @@ export function SignUpForm({ onCreated }: { onCreated: () => void }) {
     event.preventDefault();
     setBusy(true);
     try {
-      await signetClient.signUp({ name, email, password });
-      toast.success("Account created — sign in to continue");
-      onCreated();
+      const result = await signetClient.signUp({ username, name, email, password });
+      if (result.session_token) {
+        await refresh();
+        toast.success("Account created");
+        router.push("/account");
+        return;
+      }
+      toast.success("Account created — verify your email to finish");
+      onCreated(email);
     } catch (error) {
       toast.error(describeSignetError(error).message);
     } finally {
@@ -32,6 +43,22 @@ export function SignUpForm({ onCreated }: { onCreated: () => void }) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="signup-username">Username</Label>
+        <Input
+          id="signup-username"
+          autoComplete="username"
+          value={username}
+          onChange={(event) => setUsername(event.target.value)}
+          placeholder="how you will sign in"
+          pattern="[a-zA-Z0-9_.]{3,30}"
+          title="3–30 characters: letters, numbers, dots and underscores (lowercased on the server)"
+          required
+        />
+        <p className="mono-label text-muted-foreground">
+          3–30 characters — letters, numbers, dots, underscores.
+        </p>
+      </div>
       <div className="flex flex-col gap-2">
         <Label htmlFor="signup-name">Name</Label>
         <Input
@@ -73,9 +100,6 @@ export function SignUpForm({ onCreated }: { onCreated: () => void }) {
         Create account
         <ArrowRight data-icon="inline-end" />
       </Button>
-      <p className="mono-label text-muted-foreground">
-        Sign-up is live on this deployment. Verification is not enforced.
-      </p>
     </form>
   );
 }
