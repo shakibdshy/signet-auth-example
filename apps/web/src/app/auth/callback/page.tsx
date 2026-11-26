@@ -28,7 +28,6 @@ function CallbackInner() {
   }, [status, router]);
 
   useEffect(() => {
-    // Only conclude failure once the refresh has had its chance to see the new cookie.
     if (!failed && status === "anonymous") {
       const timer = setTimeout(() => setFailed(true), 1500);
       return () => clearTimeout(timer);
@@ -37,21 +36,28 @@ function CallbackInner() {
 
   if (failed) {
     return (
-      <div className="flex flex-col gap-5">
-        <div className="flex flex-col gap-3 border bg-signal-soft/40 p-5">
-          <MailWarning className="size-6 text-signal" />
-          <div className="flex flex-col gap-1">
-            <span className="font-display text-lg font-semibold">Link invalid or expired</span>
-            <p className="text-sm/relaxed text-muted-foreground">
-              Sign-in links are single-use and must be opened in the same browser that requested
-              them. Request a fresh one and try again.
-            </p>
-          </div>
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2 border border-destructive/30 bg-destructive/10 p-4">
+          <MailWarning className="size-5 text-destructive" aria-hidden="true" />
+          <span className="text-sm font-semibold">Link invalid or expired</span>
+          <p className="text-xs/relaxed text-muted-foreground">
+            Sign-in links are single-use and must be opened in the same browser
+            that requested them. Request a fresh one and try again.
+          </p>
         </div>
-        <Button render={<Link href="/sign-in/magic-link" />} nativeButton={false} className="justify-between">
+        <Button
+          render={<Link href="/sign-in/magic-link" />}
+          nativeButton={false}
+          className="justify-between"
+        >
           Request a new magic link
         </Button>
-        <Button render={<Link href="/sign-in" />} nativeButton={false} variant="outline" className="justify-between">
+        <Button
+          render={<Link href="/sign-in" />}
+          nativeButton={false}
+          variant="outline"
+          className="justify-between"
+        >
           Sign in with a password instead
         </Button>
       </div>
@@ -59,25 +65,29 @@ function CallbackInner() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-4 py-8">
-      <LoaderCircle className="size-6 animate-spin text-signal" />
-      <p className="text-sm text-muted-foreground">Signing you in…</p>
+    <div className="flex flex-col items-center gap-4 py-10">
+      <LoaderCircle
+        className="size-6 animate-spin text-foreground"
+        aria-hidden="true"
+      />
+      <p className="mono-label text-muted-foreground">
+        Verifying session cookie…
+      </p>
     </div>
   );
 }
 
 export default function AuthCallbackPage() {
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <span className="mono-label text-signal">Flow 03 / Magic link</span>
-        <h1 className="display-title text-3xl font-semibold sm:text-4xl">One moment.</h1>
-      </div>
-      <div className="border bg-card/60 p-6">
+    <main className="mx-auto flex w-full max-w-md flex-col gap-6 px-4 py-12 sm:px-6">
+      <div className="border bg-card p-6">
+        <div className="mb-4 flex flex-col gap-1">
+          <h1 className="text-lg font-semibold tracking-tight">Magic Link</h1>
+        </div>
         <Suspense fallback={null}>
           <CallbackInner />
         </Suspense>
       </div>
-    </div>
+    </main>
   );
 }

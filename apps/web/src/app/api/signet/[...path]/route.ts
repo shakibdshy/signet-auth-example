@@ -7,4 +7,10 @@ function handle(request: Request): Promise<Response> {
   return forwardSignet(request, ENV.SIGNET_BACKEND_URL);
 }
 
-export { handle as DELETE, handle as GET, handle as PATCH, handle as POST, handle as PUT };
+export {
+  handle as DELETE,
+  handle as GET,
+  handle as PATCH,
+  handle as POST,
+  handle as PUT,
+};

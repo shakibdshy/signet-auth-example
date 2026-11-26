@@ -33,14 +33,13 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <span className="mono-label text-signal">Flow 06 / Reset password</span>
-        <h1 className="display-title text-3xl font-semibold sm:text-4xl">Locked out?</h1>
-        <p className="text-sm/relaxed text-muted-foreground">
-          We email a single-use reset link. Setting a new password signs you out everywhere.
-        </p>
-      </div>
-      <div className="border bg-card/60 p-6">
+      <div className="border bg-card p-6">
+        <div className="mb-5 flex flex-col gap-1">
+          <h1 className="text-lg font-semibold tracking-tight">Forgot Password</h1>
+          <p className="text-xs/relaxed text-muted-foreground">
+            We email a single-use reset link. Setting a new password signs you out everywhere.
+          </p>
+        </div>
         {sent ? (
           <CheckInbox
             email={email}
@@ -51,9 +50,9 @@ export default function ForgotPasswordPage() {
           >
             <Link
               href="/reset-password"
-              className="mono-label text-muted-foreground transition-colors hover:text-foreground"
+              className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
-              Have the reset link open already? Enter the reset page →
+              Have the reset token already? Enter the reset page →
             </Link>
           </CheckInbox>
         ) : (
@@ -62,8 +61,10 @@ export default function ForgotPasswordPage() {
               <Label htmlFor="forgot-email">Email</Label>
               <Input
                 id="forgot-email"
+                name="email"
                 type="email"
                 autoComplete="email"
+                spellCheck={false}
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="you@example.com"
@@ -71,8 +72,10 @@ export default function ForgotPasswordPage() {
               />
             </div>
             <Button type="submit" disabled={busy} className="w-full justify-between">
-              {busy ? <LoaderCircle data-icon="inline-start" className="animate-spin" /> : null}
-              Email me a reset link
+              <span className="inline-flex items-center gap-2">
+                {busy ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true" /> : null}
+                Send reset link
+              </span>
               <ArrowRight data-icon="inline-end" />
             </Button>
           </form>

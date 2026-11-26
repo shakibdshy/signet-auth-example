@@ -12,15 +12,13 @@ export default function SignUpPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <span className="mono-label text-signal">Flow 01 / Sign up</span>
-        <h1 className="display-title text-3xl font-semibold sm:text-4xl">Create your account.</h1>
-        <p className="text-sm/relaxed text-muted-foreground">
-          A real account on the deployed backend — username, email, and a password. A verification
-          email follows.
-        </p>
-      </div>
-      <div className="border bg-card/60 p-6">
+      <div className="border bg-card p-6">
+        <div className="mb-5 flex flex-col gap-1">
+          <h1 className="text-lg font-semibold tracking-tight">Sign Up</h1>
+          <p className="text-xs/relaxed text-muted-foreground">
+            Enter your information to create an account on the live backend.
+          </p>
+        </div>
         {createdEmail === null ? (
           <SignUpForm onCreated={setCreatedEmail} />
         ) : (

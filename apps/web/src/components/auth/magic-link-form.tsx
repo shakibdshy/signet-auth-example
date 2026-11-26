@@ -75,9 +75,12 @@ export function MagicLinkForm() {
           disabled={busy || !token}
           onClick={() => void verifyManually()}
           className="w-full justify-between"
+          size="lg"
         >
-          {busy ? <LoaderCircle data-icon="inline-start" className="animate-spin" /> : null}
-          Verify token manually
+          <span className="inline-flex items-center gap-2">
+            {busy ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true" /> : null}
+            Verify token manually
+          </span>
           <ArrowRight data-icon="inline-end" />
         </Button>
       </CheckInbox>
@@ -85,22 +88,26 @@ export function MagicLinkForm() {
   }
 
   return (
-    <form onSubmit={sendMagic} className="flex flex-col gap-4">
+    <form onSubmit={sendMagic} className="flex flex-col gap-5">
       <div className="flex flex-col gap-2">
         <Label htmlFor="magic-email">Email</Label>
         <Input
           id="magic-email"
+          name="email"
           type="email"
           autoComplete="email"
+          spellCheck={false}
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           placeholder="you@example.com"
           required
         />
       </div>
-      <Button type="submit" disabled={busy} className="w-full justify-between">
-        {busy ? <LoaderCircle data-icon="inline-start" className="animate-spin" /> : null}
-        Email me a magic link
+      <Button type="submit" disabled={busy} className="w-full justify-between" size="lg">
+        <span className="inline-flex items-center gap-2">
+          {busy ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true" /> : null}
+          Email me a magic link
+        </span>
         <ArrowRight data-icon="inline-end" />
       </Button>
     </form>

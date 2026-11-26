@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@signet-auth-example/ui/components/button";
 import { Input } from "@signet-auth-example/ui/components/input";
 import { Label } from "@signet-auth-example/ui/components/label";
-import { ArrowRight, LoaderCircle } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 
 import { TokenEntry } from "@/components/auth/token-entry";
@@ -17,6 +17,7 @@ function ResetPasswordInner() {
   const router = useRouter();
   const [token, setToken] = useState(useSearchParams().get("token") ?? "");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [busy, setBusy] = useState(false);
 
   async function submit(event: React.FormEvent) {
@@ -35,10 +36,6 @@ function ResetPasswordInner() {
 
   return (
     <form onSubmit={submit} className="flex flex-col gap-4">
-      <p className="text-sm/relaxed text-muted-foreground">
-        The reset email contains a single-use link. Open it to land here with the token attached —
-        or paste the token manually. This revokes every existing session.
-      </p>
       <TokenEntry
         id="reset-token"
         label="Reset token"
@@ -46,26 +43,41 @@ function ResetPasswordInner() {
         onChange={setToken}
         placeholder="Prefilled when you arrive from the email"
       />
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-1.5">
         <Label htmlFor="reset-password">New password</Label>
-        <Input
-          id="reset-password"
-          type="password"
-          autoComplete="new-password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          placeholder="At least twelve characters"
-          minLength={12}
-          required
-        />
+        <span id="reset-password-hint" className="text-xs text-muted-foreground">
+          At least 6 characters.
+        </span>
+        <div className="relative">
+          <Input
+            id="reset-password"
+            name="new-password"
+            type={showPassword ? "text" : "password"}
+            autoComplete="new-password"
+            aria-describedby="reset-password-hint"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder="••••••••••••"
+            minLength={6}
+            className="pr-10"
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            aria-pressed={showPassword}
+            className="absolute inset-y-0 right-0 flex w-9 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
+          >
+            {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+          </button>
+        </div>
       </div>
-      <Button
-        type="submit"
-        disabled={busy || !token}
-        className="w-full justify-between"
-      >
-        {busy ? <LoaderCircle data-icon="inline-start" className="animate-spin" /> : null}
-        Set new password
+      <Button type="submit" disabled={busy || !token} className="w-full justify-between">
+        <span className="inline-flex items-center gap-2">
+          {busy ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true" /> : null}
+          Set new password
+        </span>
         <ArrowRight data-icon="inline-end" />
       </Button>
     </form>
@@ -75,14 +87,13 @@ function ResetPasswordInner() {
 export default function ResetPasswordPage() {
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <span className="mono-label text-signal">Flow 06 / Reset password</span>
-        <h1 className="display-title text-3xl font-semibold sm:text-4xl">Choose a new password.</h1>
-        <p className="text-sm/relaxed text-muted-foreground">
-          One token, one use, then it&apos;s dead — and every old session goes with it.
-        </p>
-      </div>
-      <div className="border bg-card/60 p-6">
+      <div className="border bg-card p-6">
+        <div className="mb-5 flex flex-col gap-1">
+          <h1 className="text-lg font-semibold tracking-tight">Reset Password</h1>
+          <p className="text-xs/relaxed text-muted-foreground">
+            One token, one use, then it&apos;s dead — and every old session goes with it.
+          </p>
+        </div>
         <Suspense fallback={null}>
           <ResetPasswordInner />
         </Suspense>

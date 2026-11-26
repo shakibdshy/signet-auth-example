@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@signet-auth-example/ui/components/button";
 import { Input } from "@signet-auth-example/ui/components/input";
 import { Label } from "@signet-auth-example/ui/components/label";
 
@@ -22,18 +21,21 @@ export function TokenEntry({
   placeholder?: string;
 }) {
   return (
-    <details className="group border">
-      <summary className="mono-label cursor-pointer list-none px-4 py-3 text-muted-foreground transition-colors group-open:text-foreground">
-        Clicking the link didn&apos;t work? Enter the token manually
-        <span className="ml-2 inline-block transition-transform group-open:rotate-45">+</span>
+    <details className="group border bg-muted/20">
+      <summary className="mono-label flex cursor-pointer list-none items-center justify-between px-4 py-3 text-muted-foreground transition-colors group-open:text-foreground">
+        <span>Enter token manually</span>
+        <span className="inline-block transition-transform group-open:rotate-45">
+          +
+        </span>
       </summary>
-      <div className="flex flex-col gap-3 border-t p-4">
+      <div className="flex flex-col gap-2 border-t p-4">
         <Label htmlFor={id}>{label}</Label>
         <Input
           id={id}
           value={value}
           onChange={(event) => onChange(event.target.value.trim())}
           placeholder={placeholder}
+          spellCheck={false}
           className="font-mono text-xs"
         />
       </div>

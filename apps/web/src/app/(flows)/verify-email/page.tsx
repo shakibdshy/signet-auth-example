@@ -10,7 +10,6 @@ import { Label } from "@signet-auth-example/ui/components/label";
 import { ArrowRight, LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 
-import { TokenEntry } from "@/components/auth/token-entry";
 import { describeSignetError, signetClient } from "@/lib/signet-client";
 
 function VerifyEmailInner() {
@@ -51,10 +50,6 @@ function VerifyEmailInner() {
   return (
     <div className="flex flex-col gap-6">
       <form onSubmit={verify} className="flex flex-col gap-4">
-        <p className="text-sm/relaxed text-muted-foreground">
-          The email we sent contains a verification link. Clicking it lands here with the token
-          attached — or paste the token below.
-        </p>
         <div className="flex flex-col gap-2">
           <Label htmlFor="verify-token">Verification token</Label>
           <Input
@@ -62,22 +57,27 @@ function VerifyEmailInner() {
             value={token}
             onChange={(event) => setToken(event.target.value.trim())}
             placeholder="Paste the token from your email"
+            spellCheck={false}
             className="font-mono text-xs"
             required
           />
         </div>
         <Button type="submit" disabled={busy || !token} className="w-full justify-between">
-          {busy ? <LoaderCircle data-icon="inline-start" className="animate-spin" /> : null}
-          Verify email
+          <span className="inline-flex items-center gap-2">
+            {busy ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true" /> : null}
+            Verify email
+          </span>
           <ArrowRight data-icon="inline-end" />
         </Button>
       </form>
-      <form onSubmit={resend} className="flex flex-col gap-4 border-t pt-5">
+      <form onSubmit={resend} className="flex flex-col gap-3 border-t pt-5">
         <Label htmlFor="verify-resend">Lost the email? Send a fresh one</Label>
-        <div className="flex items-end gap-2">
+        <div className="flex items-center gap-2">
           <Input
             id="verify-resend"
             type="email"
+            autoComplete="email"
+            spellCheck={false}
             value={resendEmail}
             onChange={(event) => setResendEmail(event.target.value)}
             placeholder="you@example.com"
@@ -94,19 +94,16 @@ function VerifyEmailInner() {
 
 export default function VerifyEmailPage() {
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <span className="mono-label text-signal">Flow 05 / Verify email</span>
-        <h1 className="display-title text-3xl font-semibold sm:text-4xl">Prove it&apos;s you.</h1>
-        <p className="text-sm/relaxed text-muted-foreground">
-          Verification confirms the address on your account is real and reachable.
+    <div className="border bg-card p-6">
+      <div className="mb-5 flex flex-col gap-1">
+        <h1 className="text-lg font-semibold tracking-tight">Verify Email</h1>
+        <p className="text-xs/relaxed text-muted-foreground">
+          Confirm the email address on your account is real and reachable.
         </p>
       </div>
-      <div className="border bg-card/60 p-6">
-        <Suspense fallback={null}>
-          <VerifyEmailInner />
-        </Suspense>
-      </div>
+      <Suspense fallback={null}>
+        <VerifyEmailInner />
+      </Suspense>
     </div>
   );
 }

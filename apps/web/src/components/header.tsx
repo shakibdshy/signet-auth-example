@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useSession } from "@shakibdshy/signet-auth-react";
 
 import { Button } from "@signet-auth-example/ui/components/button";
@@ -14,60 +15,63 @@ const externalLinks = [
 ] as const;
 
 export default function Header() {
+  const pathname = usePathname();
   const { status, user } = useSession();
+  const inAccount = pathname.startsWith("/account");
 
   return (
     <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur-sm">
-      <div className="mx-auto flex h-14 w-full max-w-[1500px] items-center gap-6 px-4 sm:px-6">
-        <Link href="/" className="group flex items-center gap-3">
-          <span className="relative grid size-8 place-items-center border border-signal bg-signal-soft">
-            <span className="font-display text-sm font-bold text-signal">S</span>
-            <span className="absolute -top-px -right-px size-1.5 bg-signal" />
-          </span>
-          <span className="flex flex-col leading-none">
-            <span className="font-display text-base font-semibold tracking-tight">Signet</span>
-            <span className="mono-label mt-1 text-muted-foreground">Auth / Go</span>
-          </span>
-        </Link>
-
-        <span className="hidden h-5 w-px bg-border lg:block" />
-
-        <nav className="hidden items-center gap-5 lg:flex" aria-label="Primary">
+      <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+        <div className="flex items-center gap-6">
           <Link
-            href="/playground/overview"
-            className="mono-label text-muted-foreground transition-colors hover:text-foreground"
+            href="/"
+            className="flex items-center gap-2.5 outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            Playground
-          </Link>
-          {externalLinks.map(({ href, label }) => (
-            <a
-              key={href}
-              href={href}
-              target="_blank"
-              rel="noreferrer"
-              className="mono-label inline-flex items-center gap-1 text-muted-foreground transition-colors hover:text-foreground"
-            >
-              {label}
-              <ArrowUpRight data-icon="inline-end" />
-            </a>
-          ))}
-        </nav>
-
-        <div className="ml-auto flex items-center gap-2">
-          {status === "authenticated" ? (
-            <>
-              <span className="hidden max-w-40 truncate font-mono text-xs text-foreground/80 lg:inline">
-                {user?.name ?? user?.email}
-              </span>
-              <Button
-                render={<Link href="/account" />}
-                nativeButton={false}
-                variant="outline"
-                size="sm"
+            <span className="grid size-7 place-items-center bg-primary text-primary-foreground">
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                className="size-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="square"
               >
-                Account
-              </Button>
-            </>
+                <path d="M12 3L4 7v5c0 5 3.4 8.6 8 9.8 4.6-1.2 8-4.8 8-9.8V7l-8-4z" />
+                <path d="M9.5 12.2l1.8 1.8 3.4-3.6" />
+              </svg>
+            </span>
+            <span className="text-sm font-semibold tracking-tight">SIGNET</span>
+          </Link>
+
+          <nav className="hidden items-center gap-5 md:flex" aria-label="Primary">
+            {externalLinks.map(({ href, label }) => (
+              <a
+                key={href}
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+              >
+                {label}
+                <ArrowUpRight className="size-3" aria-hidden="true" />
+              </a>
+            ))}
+          </nav>
+        </div>
+
+        <div className="flex items-center gap-2">
+
+          {status === "authenticated" ? (
+            <Button
+              render={<Link href="/account" />}
+              nativeButton={false}
+              variant={inAccount ? "default" : "outline"}
+              size="sm"
+            >
+              <span className="size-1.5 rounded-full bg-seal" aria-hidden="true" />
+              <span className="max-w-32 truncate">{user?.name ?? "Dashboard"}</span>
+            </Button>
           ) : (
             <>
               <Button
@@ -83,9 +87,8 @@ export default function Header() {
                 render={<Link href="/sign-up" />}
                 nativeButton={false}
                 size="sm"
-                className="mono-label"
               >
-                Create account
+                Sign up
               </Button>
             </>
           )}

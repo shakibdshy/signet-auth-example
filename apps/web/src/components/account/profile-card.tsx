@@ -8,6 +8,7 @@ import { LoaderCircle, MailCheck, MailX } from "lucide-react";
 import { toast } from "sonner";
 
 import { describeSignetError, signetClient } from "@/lib/signet-client";
+import { ChangeEmailDialog } from "./security-dialogs";
 
 const METHOD_LABELS: Record<string, string> = {
   password: "Password",
@@ -28,8 +29,6 @@ export function ProfileCard({
   user,
   lastMethod,
 }: {
-  // GET /me returns UserInfo, which carries no email_verified flag; the badge
-  // renders only when the API actually provides one.
   user: { name: string; email: string; email_verified?: boolean };
   lastMethod: string | null;
 }) {
@@ -49,51 +48,57 @@ export function ProfileCard({
     }
   }
 
+  const initial = (user.name || user.email || "S").slice(0, 1).toUpperCase();
+
   return (
-    <section className="flex flex-col gap-5 border bg-card/60 p-6">
-      <div className="flex items-center justify-between gap-4 border-b pb-4">
-        <span className="mono-label text-muted-foreground">Profile</span>
-        <span className="mono-label flex items-center gap-1.5 text-muted-foreground">
-          <span className="size-1.5 bg-signal" />
-          Signed in
-        </span>
-      </div>
-      <div className="flex flex-col gap-1">
-        <span className="font-display text-2xl font-semibold">{user.name}</span>
-        <span className="font-mono text-sm text-muted-foreground">{user.email}</span>
-      </div>
-      {typeof user.email_verified === "boolean" ? (
-        <div className="flex flex-wrap items-center gap-2">
-          {user.email_verified ? (
-            <span className="mono-label inline-flex items-center gap-1.5 border px-2.5 py-1.5 text-muted-foreground">
-              <MailCheck className="size-3.5 text-signal" />
-              Email verified
-            </span>
-          ) : (
-            <span className="mono-label inline-flex items-center gap-1.5 border px-2.5 py-1.5 text-muted-foreground">
-              <MailX className="size-3.5" />
-              Email unverified
-            </span>
-          )}
-        </div>
-      ) : null}
-      {lastMethod ? (
-        <span className="mono-label inline-flex w-fit items-center gap-1.5 border px-2.5 py-1.5 text-muted-foreground">
-          <span className="size-1.5 bg-signal" />
-          Last signed in via {methodLabel(lastMethod)}
-        </span>
-      ) : null}
-      {user.email_verified === false ? (
-        <Button
-          variant="outline"
-          disabled={busy}
-          onClick={() => void resendVerification()}
-          className="justify-between"
+    <div className="flex flex-wrap items-start justify-between gap-4">
+      <div className="flex items-center gap-3.5">
+        <div
+          className="grid size-11 shrink-0 place-items-center border bg-muted font-mono text-base font-semibold text-foreground"
+          aria-hidden="true"
         >
-          {busy ? <LoaderCircle data-icon="inline-start" className="animate-spin" /> : null}
-          Resend verification email
-        </Button>
-      ) : null}
-    </section>
+          {initial}
+        </div>
+        <div className="flex min-w-0 flex-col gap-0.5">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="truncate text-sm font-semibold">{user.name}</span>
+            {typeof user.email_verified === "boolean" ? (
+              user.email_verified ? (
+                <span className="inline-flex items-center gap-1 border border-seal/30 bg-seal-soft px-1.5 py-0.5 font-mono text-[0.65rem] text-seal">
+                  <MailCheck className="size-3" aria-hidden="true" />
+                  Verified
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 border border-chart-4/40 bg-chart-4/10 px-1.5 py-0.5 font-mono text-[0.65rem] text-chart-4">
+                  <MailX className="size-3" aria-hidden="true" />
+                  Unverified
+                </span>
+              )
+            ) : null}
+          </div>
+          <span className="truncate font-mono text-xs text-muted-foreground">{user.email}</span>
+          {lastMethod ? (
+            <span className="mt-0.5 font-mono text-[0.68rem] text-muted-foreground">
+              Last signed in via {methodLabel(lastMethod)}
+            </span>
+          ) : null}
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2">
+        {user.email_verified === false ? (
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={busy}
+            onClick={() => void resendVerification()}
+          >
+            {busy ? <LoaderCircle className="size-3.5 animate-spin" aria-hidden="true" /> : null}
+            Resend verification
+          </Button>
+        ) : null}
+        <ChangeEmailDialog currentEmail={user.email} />
+      </div>
+    </div>
   );
 }

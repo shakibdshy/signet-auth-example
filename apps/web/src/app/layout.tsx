@@ -1,24 +1,18 @@
 import type { Metadata } from "next";
-import { Chakra_Petch, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import { IBM_Plex_Sans, JetBrains_Mono } from "next/font/google";
 
 import "../index.css";
 import Header from "@/components/header";
 import Providers from "@/components/providers";
 
-const display = Chakra_Petch({
-  variable: "--font-chakra",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-});
-
 const sans = IBM_Plex_Sans({
   variable: "--font-plex-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
 });
 
-const mono = IBM_Plex_Mono({
-  variable: "--font-plex-mono",
+const mono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
 });
@@ -36,13 +30,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${display.variable} ${sans.variable} ${mono.variable} antialiased`}
-      >
+      <head>
+        <meta name="color-scheme" content="light dark" />
+      </head>
+      <body className={`${sans.variable} ${mono.variable} tech-grid antialiased`}>
         <Providers>
-          <div className="grid min-h-svh grid-rows-[auto_1fr]">
+          <div className="flex min-h-svh flex-col">
             <Header />
-            {children}
+            <div className="flex-1">{children}</div>
           </div>
         </Providers>
       </body>
