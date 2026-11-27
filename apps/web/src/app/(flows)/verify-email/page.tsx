@@ -10,13 +10,14 @@ import { Label } from "@signet-auth-example/ui/components/label";
 import { ArrowRight, LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 
+import { DemoInbox } from "@/components/auth/demo-inbox";
 import { describeSignetError, signetClient } from "@/lib/signet-client";
 
 function VerifyEmailInner() {
   const router = useRouter();
-  const { refresh, status } = useSession();
+  const { refresh, status, user } = useSession();
   const [token, setToken] = useState(useSearchParams().get("token") ?? "");
-  const [resendEmail, setResendEmail] = useState("");
+  const [resendEmail, setResendEmail] = useState(user?.email ?? "");
   const [busy, setBusy] = useState(false);
 
   async function verify(event: React.FormEvent) {
@@ -87,6 +88,12 @@ function VerifyEmailInner() {
             Send
           </Button>
         </div>
+        {(resendEmail || user?.email) ? (
+          <DemoInbox
+            email={resendEmail || user?.email || ""}
+            onSelectToken={(selected) => setToken(selected)}
+          />
+        ) : null}
       </form>
     </div>
   );

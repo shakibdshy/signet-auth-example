@@ -11,6 +11,7 @@ import { ArrowRight, LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 
 import { describeSignetError, signetClient } from "@/lib/signet-client";
+import { DemoInbox } from "./demo-inbox";
 
 const RESEND_SECONDS = 60;
 
@@ -103,6 +104,7 @@ export function OtpForm() {
             <ArrowRight data-icon="inline-end" />
           </Button>
         </form>
+        <DemoInbox email={email} onSelectCode={(selected) => setCode(selected.slice(0, 6))} />
         <div className="flex flex-wrap items-center justify-between gap-2 border-t pt-4">
           <button
             type="button"

@@ -207,7 +207,7 @@ export function OrganizationCard({
               <span className="border-b pb-2 text-xs font-semibold">Invites</span>
               <p className="text-xs text-muted-foreground">
                 Add an existing user to <span className="text-foreground">{selectedOrg.Name}</span>{" "}
-                by their User ID.
+                by their email address.
               </p>
               <div className="mt-1 flex justify-end">
                 <InviteMemberDialog

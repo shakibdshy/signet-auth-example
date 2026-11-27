@@ -7,6 +7,7 @@ import { LoaderCircle, MailCheck } from "lucide-react";
 import { toast } from "sonner";
 
 import { describeSignetError } from "@/lib/signet-client";
+import { DemoInbox } from "./demo-inbox";
 
 export function CheckInbox({
   email,
@@ -14,6 +15,7 @@ export function CheckInbox({
   description = "We sent you an email. Follow the link inside to continue.",
   resendLabel = "Resend email",
   onResend,
+  onSelectToken,
   children,
 }: {
   email: string;
@@ -21,6 +23,7 @@ export function CheckInbox({
   description?: string;
   resendLabel?: string;
   onResend: () => Promise<unknown>;
+  onSelectToken?: (token: string) => void;
   children?: React.ReactNode;
 }) {
   const [busy, setBusy] = useState(false);
@@ -60,6 +63,7 @@ export function CheckInbox({
           {resendLabel}
         </span>
       </Button>
+      <DemoInbox email={email} onSelectToken={onSelectToken} />
       {children}
     </div>
   );

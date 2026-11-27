@@ -18,8 +18,8 @@
       "name": "web",
       "version": "0.1.0",
       "dependencies": {
-        "@shakibdshy/signet-auth-client": "1.0.0-beta.2",
-        "@shakibdshy/signet-auth-react": "1.0.0-beta.2",
+        "@shakibdshy/signet-auth-client": "1.0.0-beta.3",
+        "@shakibdshy/signet-auth-react": "1.0.0-beta.3",
         "@signet-auth-example/ui": "workspace:*",
         "@swc/helpers": "^0.5.24",
         "@varlock/nextjs-integration": "2.0.1",
@@ -270,9 +270,9 @@
 
     "@shadcn/registry": ["@shadcn/registry@0.2.1", "", { "dependencies": { "@babel/core": "^7.28.0", "@babel/parser": "^7.28.0", "@babel/plugin-transform-typescript": "^7.28.0", "@babel/preset-typescript": "^7.27.1", "@dotenvx/dotenvx": "^1.48.4", "cn": "^0.2.4", "code-block-writer": "^13.0.3", "deepmerge": "^4.3.1", "execa": "^9.6.0", "fast-glob": "^3.3.3", "fs-extra": "^11.3.1", "fuzzysort": "^3.1.0", "kleur": "^4.1.5", "ora": "^8.2.0", "postcss": "^8.5.23", "prompts": "^2.4.2", "recast": "^0.23.11", "socks": "^2.8.8", "stringify-object": "^5.0.0", "tsconfig-paths": "^4.2.0", "type-fest": "^4.41.0", "undici": "^7.30.1", "zod": "^4.2.0" } }, "sha512-wMvZ3DGdnhCwtpeFbwKybSGfCcP52bZX77jMKgZvupmirgyA5KRLlkeQXkI2RGHIaD8TX2iWe2wcIEjjqzg2FQ=="],
 
-    "@shakibdshy/signet-auth-client": ["@shakibdshy/signet-auth-client@1.0.0-beta.2", "", { "dependencies": { "openapi-fetch": "0.17.0" } }, "sha512-tu71ZeYxc9xuuYSCIiWuxN0F/ifq5nqo7RvyR4tGosxifufnuNcZ8Lpveo45mVBHm0yIFTibmopnDjchhqIayg=="],
+    "@shakibdshy/signet-auth-client": ["@shakibdshy/signet-auth-client@1.0.0-beta.3", "", { "dependencies": { "openapi-fetch": "0.17.0" } }, "sha512-+Et7U45OySvk8R7LBSFmiQyvNvEefSXLHV2ziaBmneMnwhE5Lh8iyEH8KkhdniAU8E4wM2dp3ZTjnFqZOc45GA=="],
 
-    "@shakibdshy/signet-auth-react": ["@shakibdshy/signet-auth-react@1.0.0-beta.2", "", { "dependencies": { "@shakibdshy/signet-auth-client": "1.0.0-beta.2" }, "peerDependencies": { "react": ">=18" } }, "sha512-c3BspWIwN73DfB/OcdURLWipTlbZoJB2a0Yy1RjCSZU8P4bYtGKOuEOY8whU1jfazh5qVaTeCfciI6XHbXV2TA=="],
+    "@shakibdshy/signet-auth-react": ["@shakibdshy/signet-auth-react@1.0.0-beta.3", "", { "dependencies": { "@shakibdshy/signet-auth-client": "1.0.0-beta.3" }, "peerDependencies": { "react": ">=18" } }, "sha512-9JnGmD1tAMXGA4sH3ygveRe+uavJdP3MUby9k4COhOgek8XH6KGBkP9e38ztUoLtKHDZIPPo0HBoeoCX3/gWsg=="],
 
     "@signet-auth-example/config": ["@signet-auth-example/config@workspace:packages/config"],
 
