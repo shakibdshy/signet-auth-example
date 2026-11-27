@@ -12,11 +12,14 @@ import {
   AlertDialogTrigger,
 } from "@signet-auth-example/ui/components/alert-dialog";
 import { Laptop, LoaderCircle } from "lucide-react";
+import { UAParser } from "ua-parser-js";
 
 export type SessionRow = {
   id: string;
   created_at: string;
   absolute_expires_at: string;
+  // The raw User-Agent the Session was started with; absent on unknown clients.
+  user_agent?: string;
 };
 
 function formatDate(iso: string) {
@@ -24,6 +27,15 @@ function formatDate(iso: string) {
     dateStyle: "medium",
     timeStyle: "short",
   });
+}
+
+// Renders the Sign-in client a Session was started from. The backend stores
+// the raw User-Agent header, so parsing happens here; empty means no header.
+function describeClient(userAgent: string | undefined) {
+  if (!userAgent) return "Unknown client";
+  const { browser, os } = UAParser(userAgent);
+  const parts = [browser.name, os.name].filter(Boolean);
+  return parts.length > 0 ? parts.join(" on ") : "Unknown client";
 }
 
 export function SessionsCard({
@@ -93,7 +105,8 @@ export function SessionsCard({
                 <Laptop className="size-3.5 text-muted-foreground" aria-hidden="true" />
                 <span className="font-mono text-foreground">{session.id.slice(0, 8)}…</span>
                 <span className="text-muted-foreground">
-                  started {formatDate(session.created_at)}
+                  {describeClient(session.user_agent)} · started{" "}
+                  {formatDate(session.created_at)}
                 </span>
               </div>
               {idx === 0 ? (
