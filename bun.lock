@@ -18,8 +18,8 @@
       "name": "web",
       "version": "0.1.0",
       "dependencies": {
-        "@shakibdshy/signet-auth-client": "1.0.0-beta",
-        "@shakibdshy/signet-auth-react": "1.0.0-beta",
+        "@shakibdshy/signet-auth-client": "1.0.0-beta.2",
+        "@shakibdshy/signet-auth-react": "1.0.0-beta.2",
         "@signet-auth-example/ui": "workspace:*",
         "@swc/helpers": "^0.5.24",
         "@varlock/nextjs-integration": "2.0.1",
@@ -30,6 +30,7 @@
         "react": "catalog:",
         "react-dom": "catalog:",
         "sonner": "catalog:",
+        "ua-parser-js": "^2.0.10",
         "varlock": "catalog:",
         "zod": "catalog:",
       },
@@ -269,9 +270,9 @@
 
     "@shadcn/registry": ["@shadcn/registry@0.2.1", "", { "dependencies": { "@babel/core": "^7.28.0", "@babel/parser": "^7.28.0", "@babel/plugin-transform-typescript": "^7.28.0", "@babel/preset-typescript": "^7.27.1", "@dotenvx/dotenvx": "^1.48.4", "cn": "^0.2.4", "code-block-writer": "^13.0.3", "deepmerge": "^4.3.1", "execa": "^9.6.0", "fast-glob": "^3.3.3", "fs-extra": "^11.3.1", "fuzzysort": "^3.1.0", "kleur": "^4.1.5", "ora": "^8.2.0", "postcss": "^8.5.23", "prompts": "^2.4.2", "recast": "^0.23.11", "socks": "^2.8.8", "stringify-object": "^5.0.0", "tsconfig-paths": "^4.2.0", "type-fest": "^4.41.0", "undici": "^7.30.1", "zod": "^4.2.0" } }, "sha512-wMvZ3DGdnhCwtpeFbwKybSGfCcP52bZX77jMKgZvupmirgyA5KRLlkeQXkI2RGHIaD8TX2iWe2wcIEjjqzg2FQ=="],
 
-    "@shakibdshy/signet-auth-client": ["@shakibdshy/signet-auth-client@1.0.0-beta", "", { "dependencies": { "openapi-fetch": "0.17.0" } }, "sha512-8qFMl3AbaqBDZ6Pp8tSYHX1B/OakxSr/lMa9jrhSTDBj7BZGolquGYAKAOW+Cw8Jer0Ow7hPTg5bUuEmnI3RaQ=="],
+    "@shakibdshy/signet-auth-client": ["@shakibdshy/signet-auth-client@1.0.0-beta.2", "", { "dependencies": { "openapi-fetch": "0.17.0" } }, "sha512-tu71ZeYxc9xuuYSCIiWuxN0F/ifq5nqo7RvyR4tGosxifufnuNcZ8Lpveo45mVBHm0yIFTibmopnDjchhqIayg=="],
 
-    "@shakibdshy/signet-auth-react": ["@shakibdshy/signet-auth-react@1.0.0-beta", "", { "dependencies": { "@shakibdshy/signet-auth-client": "1.0.0-beta" }, "peerDependencies": { "react": ">=18" } }, "sha512-m3s/E7dToe/ptuOdUwwjLgedXCnPF0N+CPU/1I4cAdWplpRow5JYEBtVPI026YN7NNlDswwjS4L5ZgfmCl4VDQ=="],
+    "@shakibdshy/signet-auth-react": ["@shakibdshy/signet-auth-react@1.0.0-beta.2", "", { "dependencies": { "@shakibdshy/signet-auth-client": "1.0.0-beta.2" }, "peerDependencies": { "react": ">=18" } }, "sha512-c3BspWIwN73DfB/OcdURLWipTlbZoJB2a0Yy1RjCSZU8P4bYtGKOuEOY8whU1jfazh5qVaTeCfciI6XHbXV2TA=="],
 
     "@signet-auth-example/config": ["@signet-auth-example/config@workspace:packages/config"],
 
@@ -403,6 +404,8 @@
 
     "define-lazy-prop": ["define-lazy-prop@3.0.0", "", {}, "sha512-N+MeXYoqr3pOgn8xfyRPREN7gHakLYjhsHhWGT3fWAiL4IkAt0iDw14QiiEm2bE30c5XX5q0FtAA3CK5f9/BUg=="],
 
+    "detect-europe-js": ["detect-europe-js@0.1.2", "", {}, "sha512-lgdERlL3u0aUdHocoouzT10d9I89VVhk0qNRmll7mXdGfJT1/wqZ2ZLA4oJAjeACPY5fT1wsbq2AT+GkuInsow=="],
+
     "detect-libc": ["detect-libc@2.1.2", "", {}, "sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ=="],
 
     "diff": ["diff@8.0.4", "", {}, "sha512-DPi0FmjiSU5EvQV0++GFDOJ9ASQUVFh5kD+OzOnYdi7n3Wpm9hWWGfB/O2blfHcMVTL5WkQXSnRiK9makhrcnw=="],
@@ -484,6 +487,8 @@
     "is-plain-obj": ["is-plain-obj@4.1.0", "", {}, "sha512-+Pgi+vMuUNkJyExiMBt5IlFoMyKnr5zhJ4Uspz58WOhBF5QoIZkFyNHIbBAtHwzVAgk5RtndVNsDRN61/mmDqg=="],
 
     "is-regexp": ["is-regexp@3.1.0", "", {}, "sha512-rbku49cWloU5bSMI+zaRaXdQHXnthP6DZ/vLnfdSKyL4zUzuWnomtOEiZZOd+ioQ+avFo/qau3KPTc7Fjy1uPA=="],
+
+    "is-standalone-pwa": ["is-standalone-pwa@0.1.1", "", {}, "sha512-9Cbovsa52vNQCjdXOzeQq5CnCbAcRk05aU62K20WO372NrTv0NxibLFCK6lQ4/iZEFdEA3p3t2VNOn8AJ53F5g=="],
 
     "is-stream": ["is-stream@4.0.1", "", {}, "sha512-Dnz92NInDqYckGEUJv689RbRiTSEHCQ7wOVeALbkOz999YpqT46yMRIGtSNl2iCL1waAZSx40+h59NV/EwzV/A=="],
 
@@ -692,6 +697,10 @@
     "type-fest": ["type-fest@4.41.0", "", {}, "sha512-TeTSQ6H5YHvpqVwBRcnLDCBnDOHWYu7IvGbHT6N8AOymcr9PJGjc1GTtiWZTYg0NCgYwvnYWEkVChQAr9bjfwA=="],
 
     "typescript": ["typescript@6.0.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw=="],
+
+    "ua-is-frozen": ["ua-is-frozen@0.1.2", "", {}, "sha512-RwKDW2p3iyWn4UbaxpP2+VxwqXh0jpvdxsYpZ5j/MLLiQOfbsV5shpgQiw93+KMYQPcteeMQ289MaAFzs3G9pw=="],
+
+    "ua-parser-js": ["ua-parser-js@2.0.10", "", { "dependencies": { "detect-europe-js": "^0.1.2", "is-standalone-pwa": "^0.1.1", "ua-is-frozen": "^0.1.2" }, "bin": { "ua-parser-js": "script/cli.js" } }, "sha512-t+3Ktbq0Ies2vaSezfOaWiolH4OigQIO1dk+1xDpOydB1COVPocVYOrEV5rqZ0kFY9XYG1v9LutCyMgYBpABcw=="],
 
     "undici": ["undici@7.30.2", "", {}, "sha512-mLyPQnHwUxaM/rideoK/+KL8DaAJLRl4aBCfmX444aCSLnIaomqPLtNRe2jdCYcsk5wZzXrDIQC8ZeYNRAYyIA=="],
 
