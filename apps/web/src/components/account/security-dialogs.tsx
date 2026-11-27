@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSession } from "@shakibdshy/signet-auth-react";
 
 import { Button } from "@signet-auth-example/ui/components/button";
 import {
@@ -105,6 +106,7 @@ export function ChangeEmailDialog({ currentEmail }: { currentEmail: string }) {
 }
 
 export function ChangePasswordDialog() {
+  const { refresh } = useSession();
   const [open, setOpen] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -126,6 +128,8 @@ export function ChangePasswordDialog() {
         current_password: currentPassword,
         new_password: newPassword,
       });
+      signetClient.clearCsrfToken();
+      await refresh();
       toast.success("Password updated");
       setCurrentPassword("");
       setNewPassword("");
@@ -363,7 +367,7 @@ export function NewOrganizationDialog({
   onCreated,
 }: {
   ownerId: string;
-  onCreated?: () => void;
+  onCreated?: (createdOrgId?: string) => void;
 }) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
@@ -373,11 +377,15 @@ export function NewOrganizationDialog({
     event.preventDefault();
     setBusy(true);
     try {
-      await signetClient.createOrganization({ name, owner_id: ownerId });
+      const result = await signetClient.createOrganization({ name, owner_id: ownerId });
+      const createdId = result.Organization?.ID;
+      if (createdId) {
+        await signetClient.setActiveOrganization({ org_id: createdId }).catch(() => null);
+      }
       toast.success("Organization created");
       setName("");
       setOpen(false);
-      onCreated?.();
+      onCreated?.(createdId);
     } catch (error) {
       toast.error(describeSignetError(error).message);
     } finally {
@@ -419,9 +427,16 @@ export function NewOrganizationDialog({
   );
 }
 
-export function InviteMemberDialog() {
+export function InviteMemberDialog({
+  orgId,
+  orgName,
+  onInvited,
+}: {
+  orgId: string;
+  orgName: string;
+  onInvited?: () => void;
+}) {
   const [open, setOpen] = useState(false);
-  const [orgId, setOrgId] = useState("");
   const [userId, setUserId] = useState("");
   const [role, setRole] = useState("member");
   const [busy, setBusy] = useState(false);
@@ -432,12 +447,13 @@ export function InviteMemberDialog() {
     try {
       await signetClient.addOrganizationMember({
         org_id: orgId,
-        user_id: userId,
+        user_id: userId.trim(),
         role,
       });
-      toast.success("Member added to organization");
+      toast.success(`Member added to ${orgName}`);
       setUserId("");
       setOpen(false);
+      onInvited?.();
     } catch (error) {
       toast.error(describeSignetError(error).message);
     } finally {
@@ -455,21 +471,10 @@ export function InviteMemberDialog() {
         <DialogHeader>
           <DialogTitle>Invite Member</DialogTitle>
           <DialogDescription>
-            Add a member to your organization by User ID.
+            Add a member to <span className="font-medium text-foreground">{orgName}</span>.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={submit} className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="invite-org-id">Organization ID</Label>
-            <Input
-              id="invite-org-id"
-              value={orgId}
-              onChange={(event) => setOrgId(event.target.value)}
-              placeholder="org_..."
-              className="font-mono text-xs"
-              required
-            />
-          </div>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="invite-user-id">User ID</Label>
             <Input
@@ -494,7 +499,7 @@ export function InviteMemberDialog() {
               <option value="owner">Owner</option>
             </select>
           </div>
-          <Button type="submit" disabled={busy || !orgId || !userId} className="w-full">
+          <Button type="submit" disabled={busy || !userId.trim()} className="w-full">
             {busy ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true" /> : null}
             Invite
           </Button>
