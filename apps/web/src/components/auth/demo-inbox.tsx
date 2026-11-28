@@ -3,6 +3,14 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { Button } from "@signet-auth-example/ui/components/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@signet-auth-example/ui/components/dialog";
 import { Check, Clipboard, Inbox, LoaderCircle, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 
@@ -19,14 +27,21 @@ type DemoMessage = {
 
 export function DemoInbox({
   email,
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
   onSelectToken,
   onSelectCode,
 }: {
   email: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   onSelectToken?: (token: string) => void;
   onSelectCode?: (code: string) => void;
 }) {
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen ?? internalOpen;
+  const setOpen = controlledOnOpenChange ?? setInternalOpen;
+
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<DemoMessage[]>([]);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
@@ -66,55 +81,57 @@ export function DemoInbox({
   }
 
   return (
-    <div className="border bg-muted/25">
-      <div className="flex items-center justify-between gap-2 px-3.5 py-2.5">
-        <button
-          type="button"
-          onClick={() => setOpen((prev) => !prev)}
-          aria-expanded={open}
-          className="inline-flex items-center gap-2 text-xs font-medium text-foreground transition-colors hover:text-muted-foreground"
-        >
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger render={<Button type="button" variant="outline" size="sm" className="w-full justify-between" />}>
+        <span className="inline-flex items-center gap-2">
           <Inbox className="size-3.5" aria-hidden="true" />
-          <span>{open ? "Hide Demo Inbox" : "Open Demo Inbox"}</span>
-        </button>
-        {open ? (
+          Open Demo Inbox
+        </span>
+        <span className="font-mono text-[0.65rem] text-muted-foreground">{email}</span>
+      </DialogTrigger>
+
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Demo Inbox</DialogTitle>
+          <DialogDescription>
+            This is a demo inbox for testing — no real emails are sent. Copy or use your
+            verification token below.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="flex items-center justify-between gap-2 border bg-muted/30 px-3 py-2">
+          <span className="truncate font-mono text-xs text-foreground">{email}</span>
           <Button
             type="button"
             variant="ghost"
-            size="icon-xs"
-            aria-label="Refresh demo inbox"
+            size="xs"
             disabled={loading}
             onClick={() => void load()}
           >
-            {loading ? (
-              <LoaderCircle className="animate-spin" />
-            ) : (
-              <RefreshCw />
-            )}
+            {loading ? <LoaderCircle className="animate-spin" /> : <RefreshCw />}
+            Refresh
           </Button>
-        ) : null}
-      </div>
+        </div>
 
-      {open ? (
-        <div className="border-t p-3.5">
+        <div className="max-h-80 overflow-y-auto">
           {loading && messages.length === 0 ? (
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <LoaderCircle className="size-3.5 animate-spin" aria-hidden="true" />
+            <div className="flex items-center gap-2 py-6 text-xs text-muted-foreground">
+              <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
               Checking demo inbox…
             </div>
           ) : messages.length === 0 ? (
-            <p className="text-xs text-muted-foreground">
+            <p className="py-6 text-center text-xs text-muted-foreground">
               No demo emails for <span className="font-mono text-foreground">{email}</span> yet.
-              Click refresh in a moment.
+              Click Refresh in a moment.
             </p>
           ) : (
             <ul className="flex flex-col gap-3">
               {messages.map((msg, idx) => {
                 const key = msg.id ?? String(idx);
                 return (
-                  <li key={key} className="flex flex-col gap-2 border bg-card p-3 text-xs">
+                  <li key={key} className="flex flex-col gap-2.5 border bg-card p-3.5 text-xs">
                     <div className="flex items-start justify-between gap-2">
-                      <span className="font-medium text-foreground">
+                      <span className="font-semibold text-foreground">
                         {msg.subject || "Signet Auth Email"}
                       </span>
                       {msg.created_at ? (
@@ -128,14 +145,56 @@ export function DemoInbox({
                     </div>
 
                     {msg.body ? (
-                      <p className="line-clamp-3 text-[0.72rem]/relaxed text-muted-foreground">
-                        {msg.body}
-                      </p>
+                      <p className="text-[0.72rem]/relaxed text-muted-foreground">{msg.body}</p>
                     ) : null}
 
-                    <div className="flex flex-wrap items-center gap-2 pt-1">
-                      {msg.code ? (
-                        <>
+                    {msg.token ? (
+                      <div className="flex flex-col gap-2 border bg-muted/40 p-2.5">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="mono-label text-[0.65rem] text-muted-foreground">
+                            Token
+                          </span>
+                          <div className="flex items-center gap-1.5">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="xs"
+                              onClick={() => copyValue(`${key}-tok`, msg.token!, "Token")}
+                            >
+                              {copiedKey === `${key}-tok` ? <Check /> : <Clipboard />}
+                              Copy
+                            </Button>
+                            {onSelectToken ? (
+                              <Button
+                                type="button"
+                                size="xs"
+                                onClick={() => {
+                                  onSelectToken(msg.token!);
+                                  setOpen(false);
+                                }}
+                              >
+                                Use token
+                              </Button>
+                            ) : null}
+                          </div>
+                        </div>
+                        <code className="block break-all font-mono text-[0.7rem] text-foreground">
+                          {msg.token}
+                        </code>
+                      </div>
+                    ) : null}
+
+                    {msg.code ? (
+                      <div className="flex items-center justify-between gap-2 border bg-muted/40 p-2.5">
+                        <div className="flex items-center gap-2">
+                          <span className="mono-label text-[0.65rem] text-muted-foreground">
+                            Code
+                          </span>
+                          <code className="font-mono text-sm font-semibold text-foreground">
+                            {msg.code}
+                          </code>
+                        </div>
+                        <div className="flex items-center gap-1.5">
                           <Button
                             type="button"
                             variant="outline"
@@ -143,50 +202,30 @@ export function DemoInbox({
                             onClick={() => copyValue(`${key}-code`, msg.code!, "Code")}
                           >
                             {copiedKey === `${key}-code` ? <Check /> : <Clipboard />}
-                            Code: <span className="font-mono">{msg.code}</span>
+                            Copy
                           </Button>
                           {onSelectCode ? (
                             <Button
                               type="button"
                               size="xs"
-                              onClick={() => onSelectCode(msg.code!)}
+                              onClick={() => {
+                                onSelectCode(msg.code!);
+                                setOpen(false);
+                              }}
                             >
                               Use code
                             </Button>
                           ) : null}
-                        </>
-                      ) : null}
-
-                      {msg.token ? (
-                        <>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="xs"
-                            onClick={() => copyValue(`${key}-tok`, msg.token!, "Token")}
-                          >
-                            {copiedKey === `${key}-tok` ? <Check /> : <Clipboard />}
-                            Copy token
-                          </Button>
-                          {onSelectToken ? (
-                            <Button
-                              type="button"
-                              size="xs"
-                              onClick={() => onSelectToken(msg.token!)}
-                            >
-                              Use token
-                            </Button>
-                          ) : null}
-                        </>
-                      ) : null}
-                    </div>
+                        </div>
+                      </div>
+                    ) : null}
                   </li>
                 );
               })}
             </ul>
           )}
         </div>
-      ) : null}
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

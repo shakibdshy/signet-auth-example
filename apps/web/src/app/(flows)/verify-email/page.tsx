@@ -18,6 +18,7 @@ function VerifyEmailInner() {
   const { refresh, status, user } = useSession();
   const [token, setToken] = useState(useSearchParams().get("token") ?? "");
   const [resendEmail, setResendEmail] = useState(user?.email ?? "");
+  const [inboxOpen, setInboxOpen] = useState(false);
   const [busy, setBusy] = useState(false);
 
   async function verify(event: React.FormEvent) {
@@ -40,7 +41,8 @@ function VerifyEmailInner() {
     setBusy(true);
     try {
       await signetClient.sendVerification({ email: resendEmail });
-      toast.success("Verification email sent");
+      toast.success("Verification email sent to Demo Inbox");
+      setInboxOpen(true);
     } catch (error) {
       toast.error(describeSignetError(error).message);
     } finally {
@@ -91,6 +93,8 @@ function VerifyEmailInner() {
         {(resendEmail || user?.email) ? (
           <DemoInbox
             email={resendEmail || user?.email || ""}
+            open={inboxOpen}
+            onOpenChange={setInboxOpen}
             onSelectToken={(selected) => setToken(selected)}
           />
         ) : null}
