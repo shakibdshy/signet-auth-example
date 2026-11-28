@@ -114,6 +114,7 @@ export function OrganizationCard({
                 render={
                   <button
                     type="button"
+                    aria-label="Switch organization"
                     className="inline-flex w-fit items-center gap-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
                   />
                 }

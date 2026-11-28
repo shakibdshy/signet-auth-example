@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "@shakibdshy/signet-auth-react";
 
@@ -20,6 +20,12 @@ function VerifyEmailInner() {
   const [resendEmail, setResendEmail] = useState(user?.email ?? "");
   const [inboxOpen, setInboxOpen] = useState(false);
   const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    if (user?.email) {
+      setResendEmail((current) => current || user.email);
+    }
+  }, [user?.email]);
 
   async function verify(event: React.FormEvent) {
     event.preventDefault();

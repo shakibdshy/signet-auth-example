@@ -73,11 +73,16 @@ export function DemoInbox({
   }, [open, load]);
 
   function copyValue(key: string, value: string, label: string) {
-    void navigator.clipboard.writeText(value).then(() => {
-      setCopiedKey(key);
-      toast.success(`${label} copied`);
-      setTimeout(() => setCopiedKey(null), 1500);
-    });
+    void navigator.clipboard
+      .writeText(value)
+      .then(() => {
+        setCopiedKey(key);
+        toast.success(`${label} copied`);
+        setTimeout(() => setCopiedKey(null), 1500);
+      })
+      .catch(() => {
+        toast.error(`Could not copy ${label.toLowerCase()}`);
+      });
   }
 
   return (
@@ -108,7 +113,7 @@ export function DemoInbox({
             disabled={loading}
             onClick={() => void load()}
           >
-            {loading ? <LoaderCircle className="animate-spin" /> : <RefreshCw />}
+            {loading ? <LoaderCircle className="animate-spin" aria-hidden="true" /> : <RefreshCw aria-hidden="true" />}
             Refresh
           </Button>
         </div>

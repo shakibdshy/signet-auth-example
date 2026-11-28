@@ -3,12 +3,17 @@
 import Link from "next/link";
 import { MailCheck, MailX } from "lucide-react";
 
+import { ChangeEmailDialog } from "./security-dialogs";
+
+// The canonical Signet sign-in method values; unknown values fall back to raw display.
 const METHOD_LABELS: Record<string, string> = {
   password: "Password",
   magic_link: "Magic link",
   otp: "One-time code",
   passkey: "Passkey",
-  two_factor: "Two-factor code",
+  oauth: "OAuth",
+  sso: "SSO",
+  saml: "SAML",
 };
 
 export function methodLabel(method: string) {
@@ -22,7 +27,7 @@ export function ProfileCard({
   user,
   lastMethod,
 }: {
-  user: { name: string; email: string; email_verified?: boolean };
+  user: { name: string; email: string; email_verified?: boolean; username?: string };
   lastMethod: string | null;
 }) {
   const initial = (user.name || user.email || "S").slice(0, 1).toUpperCase();
@@ -56,7 +61,10 @@ export function ProfileCard({
               )
             ) : null}
           </div>
-          <span className="truncate font-mono text-xs text-muted-foreground">{user.email}</span>
+          <span className="truncate font-mono text-xs text-muted-foreground">
+            {user.username ? `@${user.username} · ` : ""}
+            {user.email}
+          </span>
           {lastMethod ? (
             <span className="mt-0.5 font-mono text-[0.68rem] text-muted-foreground">
               Last signed in via {methodLabel(lastMethod)}
@@ -66,10 +74,8 @@ export function ProfileCard({
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
-        <ChangeEmailDialogPlaceholder currentEmail={user.email} />
+        <ChangeEmailDialog currentEmail={user.email} />
       </div>
     </div>
   );
 }
-
-import { ChangeEmailDialog as ChangeEmailDialogPlaceholder } from "./security-dialogs";
