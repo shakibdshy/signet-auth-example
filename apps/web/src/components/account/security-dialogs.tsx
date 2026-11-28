@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSession } from "@shakibdshy/signet-auth-react";
 
 import { Button } from "@signet-auth-example/ui/components/button";
 import {
@@ -13,7 +14,17 @@ import {
 } from "@signet-auth-example/ui/components/dialog";
 import { Input } from "@signet-auth-example/ui/components/input";
 import { Label } from "@signet-auth-example/ui/components/label";
-import { Eye, EyeOff, Fingerprint, KeyRound, LoaderCircle, Mail, MailPlus, Plus, ShieldCheck } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Fingerprint,
+  KeyRound,
+  LoaderCircle,
+  Mail,
+  MailPlus,
+  Plus,
+  ShieldCheck,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import { describeSignetError, signetClient } from "@/lib/signet-client";
@@ -54,7 +65,8 @@ export function ChangeEmailDialog({ currentEmail }: { currentEmail: string }) {
         <DialogHeader>
           <DialogTitle>Change Email</DialogTitle>
           <DialogDescription>
-            Current email: <span className="font-mono text-foreground">{currentEmail}</span>
+            Current email:{" "}
+            <span className="font-mono text-foreground">{currentEmail}</span>
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={submit} className="flex flex-col gap-4">
@@ -90,12 +102,25 @@ export function ChangeEmailDialog({ currentEmail }: { currentEmail: string }) {
                 aria-label={showPassword ? "Hide password" : "Show password"}
                 className="absolute inset-y-0 right-0 flex w-9 items-center justify-center text-muted-foreground hover:text-foreground"
               >
-                {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                {showPassword ? (
+                  <EyeOff className="size-4" />
+                ) : (
+                  <Eye className="size-4" />
+                )}
               </button>
             </div>
           </div>
-          <Button type="submit" disabled={busy || !newEmail || !currentPassword} className="w-full">
-            {busy ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true" /> : null}
+          <Button
+            type="submit"
+            disabled={busy || !newEmail || !currentPassword}
+            className="w-full"
+          >
+            {busy ? (
+              <LoaderCircle
+                className="size-4 animate-spin"
+                aria-hidden="true"
+              />
+            ) : null}
             Update Email
           </Button>
         </form>
@@ -105,6 +130,7 @@ export function ChangeEmailDialog({ currentEmail }: { currentEmail: string }) {
 }
 
 export function ChangePasswordDialog() {
+  const { refresh } = useSession();
   const [open, setOpen] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -126,6 +152,8 @@ export function ChangePasswordDialog() {
         current_password: currentPassword,
         new_password: newPassword,
       });
+      signetClient.clearCsrfToken();
+      await refresh();
       toast.success("Password updated");
       setCurrentPassword("");
       setNewPassword("");
@@ -166,10 +194,18 @@ export function ChangePasswordDialog() {
               <button
                 type="button"
                 onClick={() => setShowCurrent((v) => !v)}
-                aria-label={showCurrent ? "Hide current password" : "Show current password"}
+                aria-label={
+                  showCurrent
+                    ? "Hide current password"
+                    : "Show current password"
+                }
                 className="absolute inset-y-0 right-0 flex w-9 items-center justify-center text-muted-foreground hover:text-foreground"
               >
-                {showCurrent ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                {showCurrent ? (
+                  <EyeOff className="size-4" />
+                ) : (
+                  <Eye className="size-4" />
+                )}
               </button>
             </div>
           </div>
@@ -194,7 +230,11 @@ export function ChangePasswordDialog() {
                 aria-label={showNew ? "Hide new password" : "Show new password"}
                 className="absolute inset-y-0 right-0 flex w-9 items-center justify-center text-muted-foreground hover:text-foreground"
               >
-                {showNew ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                {showNew ? (
+                  <EyeOff className="size-4" />
+                ) : (
+                  <Eye className="size-4" />
+                )}
               </button>
             </div>
           </div>
@@ -216,16 +256,29 @@ export function ChangePasswordDialog() {
               <button
                 type="button"
                 onClick={() => setShowConfirm((v) => !v)}
-                aria-label={showConfirm ? "Hide confirm password" : "Show confirm password"}
+                aria-label={
+                  showConfirm
+                    ? "Hide confirm password"
+                    : "Show confirm password"
+                }
                 className="absolute inset-y-0 right-0 flex w-9 items-center justify-center text-muted-foreground hover:text-foreground"
               >
-                {showConfirm ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                {showConfirm ? (
+                  <EyeOff className="size-4" />
+                ) : (
+                  <Eye className="size-4" />
+                )}
               </button>
             </div>
           </div>
 
           <Button type="submit" disabled={busy} className="mt-1 w-full">
-            {busy ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true" /> : null}
+            {busy ? (
+              <LoaderCircle
+                className="size-4 animate-spin"
+                aria-hidden="true"
+              />
+            ) : null}
             Change Password
           </Button>
         </form>
@@ -264,7 +317,9 @@ export function EnableTwoFactorDialog() {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Enable 2FA</DialogTitle>
-          <DialogDescription>Enable 2FA to secure your account</DialogDescription>
+          <DialogDescription>
+            Enable 2FA to secure your account
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={submit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
@@ -286,12 +341,21 @@ export function EnableTwoFactorDialog() {
                 aria-label={showPassword ? "Hide password" : "Show password"}
                 className="absolute inset-y-0 right-0 flex w-9 items-center justify-center text-muted-foreground hover:text-foreground"
               >
-                {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                {showPassword ? (
+                  <EyeOff className="size-4" />
+                ) : (
+                  <Eye className="size-4" />
+                )}
               </button>
             </div>
           </div>
           <Button type="submit" disabled={busy || !password} className="w-full">
-            {busy ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true" /> : null}
+            {busy ? (
+              <LoaderCircle
+                className="size-4 animate-spin"
+                aria-hidden="true"
+              />
+            ) : null}
             Continue
           </Button>
         </form>
@@ -330,7 +394,8 @@ export function AddPasskeyDialog() {
         <DialogHeader>
           <DialogTitle>Add New Passkey</DialogTitle>
           <DialogDescription>
-            Create a new passkey to securely access your account without a password.
+            Create a new passkey to securely access your account without a
+            password.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={submit} className="flex flex-col gap-4">
@@ -346,7 +411,10 @@ export function AddPasskeyDialog() {
           </div>
           <Button type="submit" disabled={busy} className="w-full">
             {busy ? (
-              <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
+              <LoaderCircle
+                className="size-4 animate-spin"
+                aria-hidden="true"
+              />
             ) : (
               <Fingerprint className="size-4" aria-hidden="true" />
             )}
@@ -363,7 +431,7 @@ export function NewOrganizationDialog({
   onCreated,
 }: {
   ownerId: string;
-  onCreated?: () => void;
+  onCreated?: (createdOrgId?: string) => void;
 }) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
@@ -373,11 +441,20 @@ export function NewOrganizationDialog({
     event.preventDefault();
     setBusy(true);
     try {
-      await signetClient.createOrganization({ name, owner_id: ownerId });
+      const result = await signetClient.createOrganization({
+        name,
+        owner_id: ownerId,
+      });
+      const createdId = result.Organization?.ID;
+      if (createdId) {
+        await signetClient
+          .setActiveOrganization({ org_id: createdId })
+          .catch(() => null);
+      }
       toast.success("Organization created");
       setName("");
       setOpen(false);
-      onCreated?.();
+      onCreated?.(createdId);
     } catch (error) {
       toast.error(describeSignetError(error).message);
     } finally {
@@ -410,7 +487,12 @@ export function NewOrganizationDialog({
             />
           </div>
           <Button type="submit" disabled={busy || !name} className="w-full">
-            {busy ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true" /> : null}
+            {busy ? (
+              <LoaderCircle
+                className="size-4 animate-spin"
+                aria-hidden="true"
+              />
+            ) : null}
             Create
           </Button>
         </form>
@@ -419,25 +501,34 @@ export function NewOrganizationDialog({
   );
 }
 
-export function InviteMemberDialog() {
+export function InviteMemberDialog({
+  orgId,
+  orgName,
+  onInvited,
+}: {
+  orgId: string;
+  orgName: string;
+  onInvited?: () => void;
+}) {
   const [open, setOpen] = useState(false);
-  const [orgId, setOrgId] = useState("");
-  const [userId, setUserId] = useState("");
+  const [email, setEmail] = useState("");
   const [role, setRole] = useState("member");
   const [busy, setBusy] = useState(false);
 
-  async function submit(event: React.FormEvent) {
+  async function submit(event: React.SubmitEvent) {
     event.preventDefault();
     setBusy(true);
     try {
       await signetClient.addOrganizationMember({
         org_id: orgId,
-        user_id: userId,
+        organization_id: orgId,
+        email: email.trim(),
         role,
-      });
-      toast.success("Member added to organization");
-      setUserId("");
+      } as Parameters<typeof signetClient.addOrganizationMember>[0]);
+      toast.success(`Member added to ${orgName}`);
+      setEmail("");
       setOpen(false);
+      onInvited?.();
     } catch (error) {
       toast.error(describeSignetError(error).message);
     } finally {
@@ -455,29 +546,22 @@ export function InviteMemberDialog() {
         <DialogHeader>
           <DialogTitle>Invite Member</DialogTitle>
           <DialogDescription>
-            Add a member to your organization by User ID.
+            Add a member to{" "}
+            <span className="font-medium text-foreground">{orgName}</span> by
+            email.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={submit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="invite-org-id">Organization ID</Label>
+            <Label htmlFor="invite-email">Email</Label>
             <Input
-              id="invite-org-id"
-              value={orgId}
-              onChange={(event) => setOrgId(event.target.value)}
-              placeholder="org_..."
-              className="font-mono text-xs"
-              required
-            />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="invite-user-id">User ID</Label>
-            <Input
-              id="invite-user-id"
-              value={userId}
-              onChange={(event) => setUserId(event.target.value)}
-              placeholder="usr_..."
-              className="font-mono text-xs"
+              id="invite-email"
+              type="email"
+              autoComplete="email"
+              spellCheck={false}
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              placeholder="member@example.com"
               required
             />
           </div>
@@ -494,8 +578,17 @@ export function InviteMemberDialog() {
               <option value="owner">Owner</option>
             </select>
           </div>
-          <Button type="submit" disabled={busy || !orgId || !userId} className="w-full">
-            {busy ? <LoaderCircle className="size-4 animate-spin" aria-hidden="true" /> : null}
+          <Button
+            type="submit"
+            disabled={busy || !email.trim()}
+            className="w-full"
+          >
+            {busy ? (
+              <LoaderCircle
+                className="size-4 animate-spin"
+                aria-hidden="true"
+              />
+            ) : null}
             Invite
           </Button>
         </form>

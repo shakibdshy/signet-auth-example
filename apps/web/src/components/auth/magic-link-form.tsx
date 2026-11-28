@@ -62,6 +62,7 @@ export function MagicLinkForm() {
         description="Click the sign-in link from this browser — it signs you straight in."
         resendLabel="Send the link again"
         onResend={() => signetClient.sendMagicLink({ email, callback_url: callbackUrl() })}
+        onSelectToken={(selected) => setToken(selected)}
       >
         <TokenEntry
           id="magic-token"

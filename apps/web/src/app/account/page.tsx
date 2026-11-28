@@ -24,13 +24,12 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
+import { OrganizationCard } from "@/components/account/organization-card";
 import { ProfileCard } from "@/components/account/profile-card";
 import {
   AddPasskeyDialog,
   ChangePasswordDialog,
   EnableTwoFactorDialog,
-  InviteMemberDialog,
-  NewOrganizationDialog,
 } from "@/components/account/security-dialogs";
 import {
   SessionsCard,
@@ -232,42 +231,7 @@ export default function AccountPage() {
       </section>
 
       {/* Card 2: Organization Card */}
-      <section className="flex flex-col gap-5 border bg-card p-5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-col gap-0.5">
-            <h2 className="text-sm font-semibold">Organization</h2>
-            <span className="text-xs text-muted-foreground">Personal</span>
-          </div>
-          <NewOrganizationDialog ownerId={user.id} />
-        </div>
-
-        <div className="grid gap-6 border-t pt-4 sm:grid-cols-2">
-          <div className="flex flex-col gap-3">
-            <span className="border-b pb-2 text-xs font-semibold">Members</span>
-            <div className="flex items-center gap-3">
-              <span className="grid size-8 shrink-0 place-items-center rounded-full bg-muted font-mono text-xs font-semibold">
-                {initial}
-              </span>
-              <div className="flex flex-col">
-                <span className="text-xs font-medium">{user.name}</span>
-                <span className="text-[0.7rem] text-muted-foreground">
-                  owner
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-3">
-            <span className="border-b pb-2 text-xs font-semibold">Invites</span>
-            <p className="text-xs text-muted-foreground">
-              No Active Invitations
-            </p>
-            <div className="mt-1 flex justify-end">
-              <InviteMemberDialog />
-            </div>
-          </div>
-        </div>
-      </section>
+      <OrganizationCard user={user} />
     </main>
   );
 }

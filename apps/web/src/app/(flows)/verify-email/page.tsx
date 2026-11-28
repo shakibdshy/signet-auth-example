@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "@shakibdshy/signet-auth-react";
 
@@ -10,14 +10,22 @@ import { Label } from "@signet-auth-example/ui/components/label";
 import { ArrowRight, LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 
+import { DemoInbox } from "@/components/auth/demo-inbox";
 import { describeSignetError, signetClient } from "@/lib/signet-client";
 
 function VerifyEmailInner() {
   const router = useRouter();
-  const { refresh, status } = useSession();
+  const { refresh, status, user } = useSession();
   const [token, setToken] = useState(useSearchParams().get("token") ?? "");
-  const [resendEmail, setResendEmail] = useState("");
+  const [resendEmail, setResendEmail] = useState(user?.email ?? "");
+  const [inboxOpen, setInboxOpen] = useState(false);
   const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    if (user?.email) {
+      setResendEmail((current) => current || user.email);
+    }
+  }, [user?.email]);
 
   async function verify(event: React.FormEvent) {
     event.preventDefault();
@@ -39,7 +47,8 @@ function VerifyEmailInner() {
     setBusy(true);
     try {
       await signetClient.sendVerification({ email: resendEmail });
-      toast.success("Verification email sent");
+      toast.success("Verification email sent to Demo Inbox");
+      setInboxOpen(true);
     } catch (error) {
       toast.error(describeSignetError(error).message);
     } finally {
@@ -87,6 +96,14 @@ function VerifyEmailInner() {
             Send
           </Button>
         </div>
+        {(resendEmail || user?.email) ? (
+          <DemoInbox
+            email={resendEmail || user?.email || ""}
+            open={inboxOpen}
+            onOpenChange={setInboxOpen}
+            onSelectToken={(selected) => setToken(selected)}
+          />
+        ) : null}
       </form>
     </div>
   );

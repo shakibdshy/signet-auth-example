@@ -28,16 +28,19 @@ export function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [challenge, setChallenge] = useState<string | null>(null);
   const [code, setCode] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     setBusy(true);
+    setErrorMessage(null);
     try {
+      signetClient.clearCsrfToken();
       const result = await signetClient.signIn(
         mode === "username"
           ? { email: "", username: username.trim(), password }
-          : { email, password },
+          : { email: email.trim(), password },
       );
       if (result.two_factor_challenge) {
         setChallenge(result.two_factor_challenge);
@@ -48,7 +51,9 @@ export function SignInForm() {
       toast.success("Signed in");
       router.push("/account");
     } catch (error) {
-      toast.error(describeSignetError(error).message);
+      const msg = describeSignetError(error).message;
+      setErrorMessage(msg);
+      toast.error(msg);
     } finally {
       setBusy(false);
     }
@@ -216,6 +221,15 @@ export function SignInForm() {
           </button>
         </div>
       </div>
+
+      {errorMessage ? (
+        <div
+          role="alert"
+          className="border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive"
+        >
+          {errorMessage}
+        </div>
+      ) : null}
 
       <Button
         type="submit"

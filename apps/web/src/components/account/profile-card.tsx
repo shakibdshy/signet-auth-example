@@ -1,13 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { useSession } from "@shakibdshy/signet-auth-react";
+import Link from "next/link";
+import { MailCheck, MailX } from "lucide-react";
 
-import { Button } from "@signet-auth-example/ui/components/button";
-import { LoaderCircle, MailCheck, MailX } from "lucide-react";
-import { toast } from "sonner";
-
-import { describeSignetError, signetClient } from "@/lib/signet-client";
 import { ChangeEmailDialog } from "./security-dialogs";
 
 // The canonical Signet sign-in method values; unknown values fall back to raw display.
@@ -35,22 +30,6 @@ export function ProfileCard({
   user: { name: string; email: string; email_verified?: boolean; username?: string };
   lastMethod: string | null;
 }) {
-  const { refresh } = useSession();
-  const [busy, setBusy] = useState(false);
-
-  async function resendVerification() {
-    setBusy(true);
-    try {
-      await signetClient.sendVerification({ email: user.email });
-      await refresh();
-      toast.success("Verification email sent");
-    } catch (error) {
-      toast.error(describeSignetError(error).message);
-    } finally {
-      setBusy(false);
-    }
-  }
-
   const initial = (user.name || user.email || "S").slice(0, 1).toUpperCase();
 
   return (
@@ -72,10 +51,13 @@ export function ProfileCard({
                   Verified
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 border border-chart-4/40 bg-chart-4/10 px-1.5 py-0.5 font-mono text-[0.65rem] text-chart-4">
+                <Link
+                  href="/verify-email"
+                  className="inline-flex items-center gap-1 border border-chart-4/40 bg-chart-4/10 px-1.5 py-0.5 font-mono text-[0.65rem] text-chart-4 transition-colors hover:bg-chart-4/20"
+                >
                   <MailX className="size-3" aria-hidden="true" />
                   Unverified
-                </span>
+                </Link>
               )
             ) : null}
           </div>
@@ -92,17 +74,6 @@ export function ProfileCard({
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
-        {user.email_verified === false ? (
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={busy}
-            onClick={() => void resendVerification()}
-          >
-            {busy ? <LoaderCircle className="size-3.5 animate-spin" aria-hidden="true" /> : null}
-            Resend verification
-          </Button>
-        ) : null}
         <ChangeEmailDialog currentEmail={user.email} />
       </div>
     </div>
